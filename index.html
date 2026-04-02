@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilyes AI Agency | حلول الأتمتة والذكاء الاصطناعي للمؤسسات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --accent-gold: 45, 60%, 50%;
+            --bg-dark: 0, 0%, 5%;
+            --card-border: 0, 0%, 15%;
+            --text-muted: 0, 0%, 70%;
+        }
+        
+        * { font-family: 'Outfit', 'Noto Sans Arabic', sans-serif; }
+
+        .bg-beam {
+            position: absolute;
+            top: -10%;
+            right: -5%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, hsla(var(--accent-gold), 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(100px);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pack-card {
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid hsla(var(--accent-gold), 0.2);
+            padding: 2.5rem;
+            border-radius: 25px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pack-card:hover {
+            border-color: hsla(var(--accent-gold), 0.8);
+            transform: translateY(-10px);
+            background: rgba(30, 30, 30, 0.8);
+        }
+
+        .pack-icon { font-size: 2.5rem; margin-bottom: 1.5rem; display: block; }
+        .pack-title { color: hsl(var(--accent-gold)); font-size: 1.5rem; margin-bottom: 1rem; }
+        .pack-list { list-style: none; color: var(--text-muted); font-size: 0.95rem; line-height: 1.8; }
+        .pack-list li::before { content: "✓ "; color: hsl(var(--accent-gold)); margin-left: 5px; }
+
+        .hardware-section {
+            margin-top: 8rem;
+            text-align: center;
+            background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.05), transparent);
+            padding: 5rem 0;
+            border-radius: 50px;
+        }
+
+        .hardware-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .hw-item { text-align: center; width: 150px; }
+        .hw-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .hw-name { font-size: 0.9rem; color: var(--text-muted); }
+
+        .cta-section { margin-top: 8rem; text-align: center; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-beam"></div>
+    
+    <div class="container">
+        <!-- 🔱 Hero Section -->
+        <header style="padding: 8rem 0;">
+            <div class="hero-content" style="text-align: center;">
+                <p class="fade-in" style="color: hsl(var(--accent-gold)); font-weight: 700; margin-bottom: 2rem; letter-spacing: 4px;">ILYES AI AUTOMATION AGENCY</p>
+                <h1 class="hero-tagline gradient-text" style="font-size: 4rem; line-height: 1.1;">أنظمة ذكية تليق بمستوى طموحك.</h1>
+                <p class="hero-subtext" style="max-width: 800px; margin: 2rem auto; font-size: 1.2rem; color: var(--text-dim);">نحن لا نوفر مجرد برامج، بل نبني لك منظومة أتمتة متكاملة تضاعف أرباحك وتختصر وقتك، مع توفير أرقى العتاد المعلوماتي.</p>
+                <a href="https://wa.me/213668853654" class="cta-button" style="padding: 1.5rem 3rem; font-size: 1.1rem;">احصل على استشارة مجانية الآن</a>
+            </div>
+        </header>
+
+        <!-- 🍱 Packs Section -->
+        <section id="packs">
+            <h2 class="fade-in" style="font-size: 3rem; text-align: center; margin-bottom: 1rem;">باقاتنا المتخصصة</h2>
+            <p style="text-align: center; color: var(--text-dim); margin-bottom: 5rem;">حلول برمجية مصممة خصيصاً لكل نشاط تجاري</p>
+            
+            <div class="services-grid">
+                <!-- Pack 1: Gestion Commerciale -->
+                <div class="pack-card fade-in">
+                    <span class="pack-icon">🛒</span>
+                    <h3 class="pack-title">باقة التسيير التجاري</h3>
+                    <ul class="pack-list">
+                        <li>نظام متكامل للشراء والبيع</li>
+                        <li>مثالي للملابس، الكوسميتيك، والسوبيرات</li>
+                        <li>دعم كامل للسكنار والباركود</li>
+                        <li>تقارير يومية تلقائية (WhatsApp)</li>
+                    </ul>
+                </div>
+
+                <!-- Pack 2: Cafe & Resto -->
+                <div class="pack-card fade-in" style="animation-delay: 0.1s;">
+                    <span class="pack-icon">🍔</span>
+                    <h3 class="pack-title">باقة المطاعم والمقاهي</h3>
+                    <ul class="pack-list">
+                        <li>تسيير الطاولات ونظام الكوزينة</li>
+                        <li>إدارة المنيو والإيصالات السريعة</li>
+                        <li>تنبيهات بنقص المواد الأولية</li>
+                        <li>لوحة تحكم للأرباح من الهاتف</li>
+                    </ul>
+                </div>
+
+                <!-- Pack 3: Medical -->
+                <div class="pack-card fade-in" style="animation-delay: 0.2s;">
+                    <span class="pack-icon">🏥</span>
+                    <h3 class="pack-title">باقة العيادات الطبية</h3>
+                    <ul class="pack-list">
+                        <li>تسيير الملفات الرقمية للمرضى</li>
+                        <li>تنظيم المواعيد (Rdv) والوصفات</li>
+                        <li>تقارير طبية Compte rendu آلية</li>
+                        <li>مثالي لكافة التخصصات الطبية</li>
+                    </ul>
+                </div>
+
+                <!-- Pack 4: Schools -->
+                <div class="pack-card fade-in" style="animation-delay: 0.3s;">
+                    <span class="pack-icon">🎓</span>
+                    <h3 class="pack-title">باقة المدارس الخاصة</h3>
+                    <ul class="pack-list">
+                        <li>تسجيل الطلاب ونظام الغيابات</li>
+                        <li>تسيير الدفعات المالية الشهرية</li>
+                        <li>إرسال تنبيهات للأولياء آلياً</li>
+                        <li>إدارة كاملة للمعلمين والحصص</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ⚙️ Hardware Section -->
+        <section class="hardware-section fade-in">
+            <h2 style="font-size: 2.5rem; margin-bottom: 3rem;">العتاد المعلوماتي المتوفر ⚙️</h2>
+            <div class="hardware-grid">
+                <div class="hw-item"><span class="hw-icon">🖨️</span><p class="hw-name">طابعات التذاكر والباركود</p></div>
+                <div class="hw-item"><span class="hw-icon">📸</span><p class="hw-name">قارئ الباركود (Scanner)</p></div>
+                <div class="hw-item"><span class="hw-icon">💵</span><p class="hw-name">درج الكاش (Cash Drawer)</p></div>
+                <div class="hw-item"><span class="hw-icon">🖥️</span><p class="hw-name">وحدات مركزية وشاشات</p></div>
+                <div class="hw-item"><span class="hw-icon">📄</span><p class="hw-name">مستهلكات الورق بجميع المقاسات</p></div>
+            </div>
+        </section>
+
+        <!-- 💼 Real Demo Link -->
+        <section id="demo" style="margin-top: 8rem;">
+            <div class="pack-card" style="text-align: center; border-style: dashed; border-width: 2px;">
+                <h2 style="margin-bottom: 1rem;">شاهد نظام POS الحقيقي قيد العمل</h2>
+                <p style="margin-bottom: 2rem;">لقد قمنا بتطوير نسخة حية لنظام السوبيرات (Grocery POS) يمكنك تجربتها الآن.</p>
+                <a href="grocery_pos.html" style="color: hsl(var(--accent-gold)); font-weight: 700; font-size: 1.2rem;">تجربة نظام POS الآن ←</a>
+            </div>
+        </section>
+
+        <!-- 📞 Footer -->
+        <footer style="margin-top: 10rem; padding-bottom: 5rem; text-align: center; border-top: 1px solid hsla(var(--card-border), 0.5); padding-top: 5rem;">
+            <p style="color: var(--text-muted);">© 2026 Ilyes AI Automation Agency. جميع الأنظمة تحت السيطرة.</p>
+        </footer>
+    </div>
+
+    <!-- 🪄 Micro-interactions Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.pack-card, .hardware-section, h2').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>

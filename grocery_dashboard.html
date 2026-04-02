@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم والتقارير - Ilyes AI Analytics 📊</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg-deep: #faf9f5; /* Blanch Casi */
+            --card-glass: rgba(255, 255, 255, 0.9);
+            --primary: #0070FF;
+            --gold: #B8860B;
+            --border: rgba(0, 0, 0, 0.08);
+            --text-main: #111111;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', 'Noto Sans Arabic', sans-serif; }
+        body { background: var(--bg-deep); color: var(--text-main); padding: 40px; overflow-x: hidden; }
+
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .dashboard-header h1 { font-size: 32px; font-weight: 700; color: var(--gold); }
+
+        /* البطاقات الرئيسية */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card {
+            background: var(--card-glass);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 70%);
+        }
+
+        .stat-label { font-size: 14px; color: #555; margin-bottom: 10px; }
+        .stat-value { font-size: 42px; font-weight: 800; color: var(--text-main); font-family: 'Outfit'; }
+        .stat-trend { font-size: 12px; margin-top: 10px; color: var(--gold); }
+
+        /* الرسوم البيانية */
+        .analytics-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .chart-card, .alerts-card {
+            background: var(--card-glass);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+        }
+
+        .section-title { font-size: 18px; margin-bottom: 25px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .dot { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; display: inline-block; }
+
+        /* التنبيهات */
+        .alert-item {
+            display: flex; gap: 15px; padding: 15px; background: #ffffff; 
+            border-radius: 15px; margin-bottom: 15px; border-right: 4px solid var(--gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            color: var(--text-main);
+        }
+        .alert-item p { font-size: 13px; line-height: 1.4; }
+        .alert-time { font-size: 10px; color: #888; }
+
+        .btn-n8n {
+            width: 100%; margin-top: 20px; padding: 15px; background: transparent; 
+            border: 1px solid var(--primary); color: var(--primary); 
+            border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.3s;
+        }
+        .btn-n8n:hover { background: var(--primary); color: black; }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-header">
+        <div>
+            <h1>إحصائيات المتجر اليومية 📈</h1>
+            <p style="color:#555; font-size:12px;">متابعة الأرباح والمخزون في الوقت الحقيقي</p>
+        </div>
+        <div style="display:flex; gap:15px;">
+            <a href="grocery_pos.html" style="text-decoration:none; color:white; background:rgba(255,255,255,0.05); padding:12px 24px; border-radius:12px; font-size:14px;">واجهة البيع</a>
+            <a href="grocery_inventory.html" style="text-decoration:none; color:white; background:rgba(255,255,255,0.05); padding:12px 24px; border-radius:12px; font-size:14px;">إدارة السلع</a>
+        </div>
+    </div>
+
+    <!-- بطاقات الإحصائيات -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <p class="stat-label">مبيعات اليوم (Recette)</p>
+            <p class="stat-value" id="dailyTotal">0.00</p>
+            <p class="stat-trend">+14% عن الأمس</p>
+        </div>
+        <div class="stat-card" style="border-color: var(--primary);">
+            <p class="stat-label">الفائدة الصافية (Profit)</p>
+            <p class="stat-value" style="color:var(--primary)" id="dailyProfit">0.00</p>
+            <p class="stat-trend">ربح ممتاز اليوم ✅</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">عدد الزبائن</p>
+            <p class="stat-value" id="custCount">0</p>
+            <p class="stat-trend">متوسط العمليات الحالية</p>
+        </div>
+    </div>
+
+    <!-- الرسوم والأنوار -->
+    <div class="analytics-grid">
+        <div class="chart-card">
+            <div class="section-title"><span class="dot"></span> أداء المبيعات الأسبوعي</div>
+            <div style="height: 350px;">
+                <canvas id="weeklyChart"></canvas>
+            </div>
+        </div>
+
+        <div class="alerts-card">
+            <div class="section-title"><span class="dot" style="background:var(--gold);"></span> نادي الولاء (Loyalty)</div>
+            <table style="width:100%; font-size:12px; border-collapse:collapse; margin-bottom: 20px;">
+                <thead>
+                    <tr style="text-align:right; color:#555;">
+                        <th style="padding-bottom:10px;">الزبون</th>
+                        <th style="padding-bottom:10px;">النقاط</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td style="padding:10px 0; border-bottom:1px solid var(--border);">0661 22 XX XX</td><td style="color:var(--gold)">1,240 pts</td></tr>
+                    <tr><td style="padding:10px 0; border-bottom:1px solid var(--border);">0550 44 XX XX</td><td style="color:var(--gold)">850 pts</td></tr>
+                    <tr><td style="padding:10px 0; border-bottom:1px solid var(--border);">0772 11 XX XX</td><td style="color:var(--gold)">620 pts</td></tr>
+                </tbody>
+            </table>
+
+            <div class="section-title"><span class="dot" style="background:var(--gold);"></span> تنبيهات ذكية (AI)</div>
+            
+            <div class="alert-item">
+                <div>
+                    <p><strong>نقص مخزون:</strong> حليب كونفيا 1ل شارف على النفاذ (بقي 5 قطع فقط).</p>
+                    <span class="alert-time">منذ 10 دقائق</span>
+                </div>
+            </div>
+
+            <div class="alert-item" style="border-right-color: var(--primary);">
+                <div>
+                    <p><strong>توصية AI:</strong> وقت ذروة البيع يبدأ في 17:00، تأكد من سرعة الكيس.</p>
+                    <span class="alert-time">آلياً</span>
+                </div>
+            </div>
+
+            <button class="btn-n8n" onclick="sendToN8N()">📤 إرسال التقرير النهائي لواتساب المالك</button>
+        </div>
+    </div>
+
+    <script>
+        // --- استرجاع البيانات الحقيقية من LocalStorage ---
+        function loadData() {
+            const rawSales = localStorage.getItem('grocery_sales');
+            const sales = rawSales ? JSON.parse(rawSales) : [];
+            
+            let totalRevenue = 0;
+            let totalProfit = 0;
+            let customerCount = sales.length;
+
+            sales.forEach(s => {
+                totalRevenue += s.total;
+                totalProfit += s.profit;
+            });
+
+            document.getElementById('dailyTotal').innerText = totalRevenue.toFixed(2) + " دج";
+            document.getElementById('dailyProfit').innerText = totalProfit.toFixed(2) + " دج";
+            document.getElementById('custCount').innerText = customerCount;
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('weeklyChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                    datasets: [{
+                        label: 'المبيعات اليومية',
+                        data: [12000, 15000, 11000, 18450, 14000, 22000, 25000],
+                        borderColor: '#00FF9D',
+                        backgroundColor: 'rgba(0, 255, 157, 0.05)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                        x: { grid: { display: false }, ticks: { color: '#666' } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        async function sendToN8N() {
+            const rawSales = localStorage.getItem('grocery_sales');
+            const sales = rawSales ? JSON.parse(rawSales) : [];
+            const today = new Date().toLocaleDateString('ar-DZ');
+            
+            const todaySales = sales.filter(s => s.date === today);
+            
+            const summary = {
+                date: today,
+                totalRevenue: todaySales.reduce((acc, s) => acc + s.total, 0),
+                totalProfit: todaySales.reduce((acc, s) => acc + s.profit, 0),
+                transactions: todaySales.length,
+                agency: "Ilyes AI Automation"
+            };
+
+            gsap.to(".btn-n8n", { scale: 0.95, duration: 0.1, yoyo: true, repeat: 1 });
+            
+            // محاكاة الإرسال لـ n8n (Webhook)
+            console.log("إرسال التقرير لـ n8n:", summary);
+            alert(`✅ تم إرسال التقرير المجمع بنجاح!\nالمبيعات: ${summary.totalRevenue} دج\nالأرباح: ${summary.totalProfit} دج`);
+            
+            /* 
+            // الكود الحقيقي للربط (عند توفر الرابط):
+            fetch('YOUR_N8N_WEBHOOK_URL', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(summary)
+            });
+            */
+        }
+
+        // أنيميشن الدخول
+        gsap.from(".stat-card", { y: 50, opacity: 0, stagger: 0.2, duration: 1, ease: "power4.out" });
+
+        window.onload = () => {
+            loadData();
+            renderChart();
+        };
+    </script>
+</body>
+</html>

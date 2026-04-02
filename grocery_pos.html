@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeroSync AI POS - النسخة المرئية 💎</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-main: #faf9f5; /* Blanch Casi */
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --border: rgba(0, 0, 0, 0.08);
+            --primary: #0070FF; /* أزرق ملكي يتناسب مع الخلفية الفاتحة */
+            --gold: #B8860B;
+            --text: #111111;
+            --text-dim: #666666;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', 'Noto Sans Arabic', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+
+        /* --- Layout --- */
+        .pos-container { display: flex; width: 100%; height: 100%; }
+
+        /* Left Side: Product Grid (65%) */
+        .products-section { flex: 1.8; display: flex; flex-direction: column; padding: 25px; gap: 20px; border-left: 1px solid var(--border); }
+        
+        .search-nav { display: flex; gap: 15px; align-items: center; }
+        .search-bar { flex: 1; background: #ffffff; border: 1px solid var(--border); padding: 12px 20px; border-radius: 15px; color: var(--text); font-size: 14px; }
+        
+        .categories-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .category-btn { 
+            padding: 10px 25px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+            border-radius: 12px; font-size: 13px; cursor: pointer; white-space: nowrap; transition: 0.3s;
+        }
+        .category-btn.active { background: var(--gold); color: black; font-weight: 700; border-color: var(--gold); }
+
+        .products-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+            gap: 15px; overflow-y: auto; padding-right: 5px; 
+        }
+        
+        .product-tile {
+            background: #ffffff; border: 1px solid var(--border); padding: 20px 15px;
+            border-radius: 20px; text-align: center; cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            color: var(--text);
+        }
+        .product-tile:hover { transform: translateY(-5px); border-color: var(--gold); background: #ffffff; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+        .tile-icon { width: 50px; height: 50px; background: #fdfdfd; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .tile-name { font-size: 14px; font-weight: 600; color: var(--text); }
+
+        .tile-price { font-size: 13px; color: var(--primary); font-weight: 700; }
+
+        /* Right Side: Cart (35%) */
+        .cart-section { flex: 1; background: #ffffff; display: flex; flex-direction: column; padding: 25px; gap: 20px; }
+        .cart-items { flex: 1; overflow-y: auto; background: rgba(0,0,0,0.03); border-radius: 20px; padding: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 12px 5px; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 13px; color: var(--text); }
+
+
+        .total-panel { background: rgba(184, 134, 11, 0.05); border: 1px solid var(--gold); padding: 25px; border-radius: 20px; text-align: center; }
+        .total-amount { font-size: 40px; font-weight: 800; color: var(--text); display: block; margin-top: 5px; }
+
+        .btn-pay { background: var(--primary); color: black; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        .btn-pay:hover { filter: brightness(1.2); transform: scale(1.02); }
+
+        /* Scanner Bar (Hidden but focused) */
+        .scanner-status { font-size: 10px; color: var(--text-dim); display: flex; align-items: center; gap: 5px; }
+        .pulse { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); }
+
+        /* Thermal Printing */
+        @media print {
+            body * { visibility: hidden; }
+            #receiptTemplate { display: block !important; visibility: visible; position: absolute; left: 0; top: 0; width: 72mm; padding: 2mm; color: black; background: white; font-family: 'Courier New', Courier, monospace; text-align: center; }
+            .receipt-header h3 { font-size: 18px; margin-bottom: 5px; }
+            .receipt-header p { font-size: 10px; margin-bottom: 15px; }
+            .receipt-item { display: flex; justify-content: space-between; font-size: 11px; margin-top: 5px; border-bottom: 0.5px dashed #ccc; }
+            .receipt-total { margin-top: 15px; border-top: 2px solid #000; padding-top: 5px; font-weight: bold; font-size: 15px; }
+        }
+
+        /* User Guide Modal */
+        .guide-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); 
+            display: none; align-items: center; justify-content: center; z-index: 1000; 
+        }
+        .guide-card { 
+            background: #ffffff; color: #111111; padding: 40px; border-radius: 30px; 
+            max-width: 500px; width: 90%; text-align: center; position: relative;
+        }
+        .guide-step { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-align: right; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .step-num { width: 30px; height: 30px; background: var(--gold); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        
+        .help-btn { position: fixed; bottom: 20px; left: 20px; background: var(--gold); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s; z-index: 500; }
+        .help-btn:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body onclick="document.getElementById('barcodeInput').focus();">
+
+    <div class="pos-container">
+        <!-- قسم المنتجات -->
+        <section class="products-section">
+            <div class="search-nav">
+                <input type="text" id="tileSearch" class="search-bar" placeholder="🔍 ابحث عن منتج بالاسم..." oninput="filterGrid()">
+                <div class="scanner-status">
+                    <div class="pulse"></div>
+                    <span>Scanner Ready</span>
+                </div>
+            </div>
+
+            <div class="categories-bar" id="categoryBar">
+                <button class="category-btn active" onclick="filterByCategory('all')">الكل</button>
+                <!-- الفئات ستضاف آلياً -->
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- المنتجات ستظهر هنا -->
+            </div>
+            
+            <input type="text" id="barcodeInput" style="position: absolute; opacity: 0; pointer-events: none;" autofocus autocomplete="off">
+            <span style="font-size: 11px; color: var(--text-dim); margin-top: 5px;"><kbd>F1</kbd> دفع | <kbd>F2</kbd> طباعة | <kbd>Esc</kbd> تصفير</span>
+        </section>
+
+        <!-- المبيعات الأخيرة -->
+        <div class="recent-bar" id="recentBar">
+            <span>آخر العمليات:</span>
+        </div>
+
+        <div class="help-btn" onclick="toggleGuide(true)">؟</div>
+
+        <!-- دليل الاستخدام السريع -->
+        <div class="guide-overlay" id="userGuide">
+            <div class="guide-card">
+                <h2 style="margin-bottom: 30px; color: var(--gold);">📘 دليل الاستخدام السريع</h2>
+                
+                <div class="guide-step">
+                    <span class="step-num">1</span>
+                    <p><strong>السكنار:</strong> وجه السكنار للمنتج مباشرة، النظام يلتقط الإشارة آلياً.</p>
+                </div>
+                <div class="guide-step">
+                    <span class="step-num">2</span>
+                    <p><strong>البحث اليدوي:</strong> استخدم شريط البحث العلوي للوصول للسلع بدون باركود.</p>
+                </div>
+                <div class="guide-step">
+                    <span class="step-num">3</span>
+                    <p><strong>الاختصارات:</strong> اضغط <strong>F1</strong> للدفع، و <strong>F2</strong> للطباعة الفورية.</p>
+                </div>
+                <div class="guide-step">
+                    <span class="step-num">4</span>
+                    <p><strong>التصفير:</strong> اضغط <strong>Esc</strong> لإفراغ السلة وبدء عملية جديدة.</p>
+                </div>
+
+                <button onclick="toggleGuide(false)" style="margin-top: 20px; padding: 12px 30px; background: var(--text); color: white; border: none; border-radius: 12px; cursor: pointer;">فهمت، شكراً ✨</button>
+            </div>
+        </div>
+
+        <!-- المبيعات الأخيرة -->
+        <div class="recent-bar" id="recentBar">
+            <span>آخر العمليات:</span>
+            <!-- تظهر هنا آلياً -->
+        </div>
+
+
+        <!-- قسم السلة -->
+        <section class="cart-section">
+            <h3 style="color:var(--gold); border-bottom:1px solid var(--border); padding-bottom:15px;">قائمة الطلبات 🛒</h3>
+            
+            <div class="cart-items">
+                <table>
+                    <tbody id="cartItems">
+                        <!-- العناصر المضافة -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total-panel">
+                <span style="font-size:12px; color:var(--gold);">المجموع الإجمالي</span>
+                <span class="total-amount" id="grandTotal">0.00</span>
+            </div>
+
+            <button class="btn-pay" onclick="finishTransaction()">💳 تنفيذ الطلب (Save)</button>
+            <button onclick="window.print()" style="background:transparent; color:white; border:1px solid var(--border); padding:10px; border-radius:10px; cursor:pointer; font-size:12px;">🖨️ طباعة التذكرة</button>
+        </section>
+    </div>
+
+    <!-- تذكرة الطباعة (مخفية) -->
+    <div id="receiptTemplate" style="display:none;"></div>
+
+    <script>
+        let cart = [];
+        let inventory = {};
+
+        function loadAll() {
+            const stored = localStorage.getItem('grocery_products');
+            inventory = stored ? JSON.parse(stored) : {
+                "628123456789": { name: "حليب كونفيا 1ل", category: "ألبان", price: 105, icon: "🥛" },
+                "11223344": { name: "قهوة فاكتو 250غ", category: "معلبات", price: 240, icon: "☕" },
+                "778899": { name: "زيت إيليو 1ل", category: "معلبات", price: 150, icon: "🧴" }
+            };
+            
+            renderCategories();
+            renderGrid();
+        }
+
+        // --- عرض التصنيفات ---
+        function renderCategories() {
+            const bar = document.getElementById('categoryBar');
+            const cats = new Set(Object.values(inventory).map(p => p.category || 'عام'));
+            
+            bar.innerHTML = '<button class="category-btn active" onclick="filterByCategory(\'all\', this)">الكل</button>';
+            cats.forEach(c => {
+                bar.innerHTML += `<button class="category-btn" onclick="filterByCategory('${c}', this)">${c}</button>`;
+            });
+        }
+
+        // --- عرض شبكة المنتجات ---
+        function renderGrid(filter = 'all', search = '') {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
+            Object.keys(inventory).forEach(code => {
+                const p = inventory[code];
+                const matchesCat = filter === 'all' || p.category === filter;
+                const matchesSearch = p.name.includes(search);
+                
+                if(matchesCat && matchesSearch) {
+                    const tile = document.createElement('div');
+                    tile.className = 'product-tile';
+                    tile.onclick = () => addToCart(code);
+                    tile.innerHTML = `
+                        <div class="tile-icon">${p.icon || '🛍️'}</div>
+                        <div class="tile-name">${p.name}</div>
+                        <div class="tile-price">${p.price} دج</div>
+                    `;
+                    grid.appendChild(tile);
+                    gsap.from(tile, { scale: 0.8, opacity: 0, duration: 0.3 });
+                }
+            });
+        }
+
+        function filterByCategory(cat, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            renderGrid(cat);
+        }
+
+        function filterGrid() {
+            const search = document.getElementById('tileSearch').value;
+            renderGrid('all', search);
+        }
+
+        // --- منطق السلة والسكنار ---
+        function addToCart(code) {
+            const p = inventory[code];
+            if(!p) return;
+            
+            const existing = cart.find(i => i.code === code);
+            if(existing) existing.qty++;
+            else cart.push({ ...p, code, qty: 1 });
+            
+            renderCart();
+            // لقطة أنيميشن سريعة
+            gsap.from("#grandTotal", { scale: 1.2, duration: 0.2, color: '#00FF9D' });
+        }
+
+        function renderCart() {
+            const list = document.getElementById('cartItems');
+            list.innerHTML = '';
+            let total = 0;
+            
+            cart.forEach((item, index) => {
+                total += item.price * item.qty;
+                list.innerHTML += `
+                    <tr>
+                        <td><strong>${item.name}</strong></td>
+                        <td>x${item.qty}</td>
+                        <td style="color:var(--primary); font-weight:700;">${item.price * item.qty}</td>
+                        <td onclick="removeItem(${index})" style="color:red; cursor:pointer;">✖</td>
+                    </tr>
+                `;
+            });
+            document.getElementById('grandTotal').innerText = total.toFixed(2);
+        }
+
+        function removeItem(idx) { cart.splice(idx, 1); renderCart(); }
+
+        const barcodeInput = document.getElementById('barcodeInput');
+        
+        // --- الحفاظ على الفوكوس للسكنار دائماً ---
+        document.addEventListener('click', () => barcodeInput.focus());
+
+        // --- اختصارات لوحة المفاتيح ---
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'F1') { e.preventDefault(); finishTransaction(); }
+            if(e.key === 'F2') { e.preventDefault(); window.print(); }
+            if(e.key === 'Escape') { if(confirm("تصفير السلة؟")) { cart = []; renderCart(); } }
+        });
+
+        barcodeInput.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') {
+                addToCart(barcodeInput.value.trim());
+                barcodeInput.value = '';
+            }
+        });
+
+        function finishTransaction() {
+            if(cart.length === 0) return;
+            const total = parseFloat(document.getElementById('grandTotal').innerText);
+            
+            let totalProfit = 0;
+            const currentInventory = JSON.parse(localStorage.getItem('grocery_products') || "{}");
+            
+            cart.forEach(item => {
+                const prod = currentInventory[item.code];
+                if(prod) totalProfit += (prod.price - prod.buy) * item.qty;
+            });
+
+            // حفظ المبيعة للتقرير المجمع
+            const sales = JSON.parse(localStorage.getItem('grocery_sales') || "[]");
+            const newSale = { 
+                id: Date.now(), 
+                date: new Date().toLocaleDateString('ar-DZ'), 
+                time: new Date().toLocaleTimeString('ar-DZ'),
+                total, 
+                profit: totalProfit, 
+                items: cart.length 
+            };
+            sales.push(newSale);
+            localStorage.setItem('grocery_sales', JSON.stringify(sales));
+            
+            updateRecentBar(newSale);
+            updateReceipt();
+            
+            alert(`✅ تم إتمام العملية بنجاح! التوتال: ${total} دج`);
+            cart = []; renderCart();
+        }
+
+        function updateRecentBar(sale) {
+            const bar = document.getElementById('recentBar');
+            const item = document.createElement('div');
+            item.className = 'recent-item';
+            item.innerHTML = `🛒 ${sale.total} دج | <small>${sale.time}</small>`;
+            if(bar.children.length > 6) bar.removeChild(bar.children[1]); 
+            bar.appendChild(item);
+        }
+
+        function updateReceipt() {
+             const rTpl = document.getElementById('receiptTemplate');
+             let itemsHtml = '';
+             cart.forEach(item => {
+                itemsHtml += `
+                    <div class="receipt-item">
+                        <span>${item.name} x${item.qty}</span>
+                        <span>${item.price * item.qty}</span>
+                    </div>`;
+             });
+
+             rTpl.innerHTML = `
+                <div class="receipt-header">
+                    <h3>ILYES AI GROCERY</h3>
+                    <p>الجزائر - أتمتة الأعمال</p>
+                    <p>${new Date().toLocaleString('ar-DZ')}</p>
+                </div>
+                ${itemsHtml}
+                <div class="receipt-total">
+                    <span>المجموع الإجمالي:</span>
+                    <span>${document.getElementById('grandTotal').innerText} دج</span>
+                </div>
+                <p style="margin-top:10px; font-size:9px;">نظام HeroSync AI v3.0</p>
+             `;
+        }
+
+        function toggleGuide(show) {
+            const guide = document.getElementById('userGuide');
+            guide.style.display = show ? 'flex' : 'none';
+            if(show) gsap.from(".guide-card", { scale: 0.8, opacity: 0, duration: 0.4, ease: "back.out(1.7)" });
+        }
+
+        window.onload = () => {
+            loadAll();
+            // إظهار الدليل تلقائياً عند أول فتح
+            if(!localStorage.getItem('guide_shown')) {
+                toggleGuide(true);
+                localStorage.setItem('guide_shown', 'true');
+            }
+        };
+    </script>
+</body>
+</html>

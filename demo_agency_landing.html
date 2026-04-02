@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ilyes AI Automation | وكالة الأتمتة الذكية</title>
+    <!-- Modern Typography: Outfit for Headings, Inter for Body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           UI/UX PRO MAX DESIGN SYSTEM 
+           Theme: "Cyber-Elegance" (Dark Mode + Glassmorphism + Neon Accents)
+           ========================================================================== */
+        
+        :root {
+            /* Color Palette */
+            --bg-base: #0A0A0B;
+            --bg-surface: #121214;
+            --text-primary: #F8F9FA;
+            --text-secondary: #A1A1AA;
+            
+            /* Gradients */
+            --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            --gold-accent: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+            
+            /* Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --blur-effect: blur(16px);
+            
+            /* Spacing & Layout */
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Ambient Background Glow */
+        .ambient-glow {
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(60px);
+            z-index: -1;
+        }
+
+        .ambient-glow-2 {
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(60px);
+            z-index: -1;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 5%;
+            background: rgba(10, 10, 11, 0.8);
+            backdrop-filter: var(--blur-effect);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 24px;
+            letter-spacing: -0.5px;
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+            position: relative;
+        }
+
+        .badge {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #E2E8F0;
+            margin-bottom: 32px;
+            backdrop-filter: var(--blur-effect);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .badge span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #10B981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10B981;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 72px);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero h1 span {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(16px, 2vw, 20px);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 48px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient);
+            color: white;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: white;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 16px;
+            text-decoration: none;
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            backdrop-filter: var(--blur-effect);
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard Mockup (Glassmorphism) */
+        .mockup-container {
+            margin-top: 64px;
+            width: 100%;
+            max-width: 900px;
+            height: 400px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            animation: scaleUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+        }
+        
+        /* Decorative UI elements inside mockup */
+        .mockup-sidebar {
+            width: 250px;
+            background: rgba(255,255,255,0.02);
+            border-left: 1px solid var(--glass-border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .skeleton-line {
+            height: 12px;
+            background: var(--glass-bg);
+            border-radius: 4px;
+            width: 100%;
+        }
+        .skeleton-line.short { width: 60%; }
+        .skeleton-line.long { width: 80%; }
+
+        .mockup-main {
+            flex: 1;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .mockup-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mockup-chart {
+            height: 100px;
+            width: 100%;
+            border-radius: 8px;
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.2) 0%, rgba(59, 130, 246, 0) 100%);
+            border-bottom: 2px solid #3B82F6;
+            margin-top: auto;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+    <div class="ambient-glow-2"></div>
+
+    <nav>
+        <div class="logo">Ilyes Agency.</div>
+        <div>
+            <a href="#" class="btn-secondary" style="padding: 8px 24px; font-size: 14px;">تواصل معنا</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="badge">
+            <span></span> أنظمة أتمتة الذكاء الاصطناعي 2026
+        </div>
+        
+        <h1>حوّل عملك إلى <span>نظام ذاتي القيادة</span></h1>
+        
+        <p>نحن نبني وكلاء ذكاء اصطناعي وبوتات خدمة عملاء متطورة للشركات العقارية ومتاجر التجارة الإلكترونية لمضاعفة مبيعاتك وتقليل تكاليف التشغيل.</p>
+        
+        <div class="btn-group">
+            <a href="#" class="btn-primary">احجز مكالمة استشارية</a>
+            <a href="#" class="btn-secondary">استكشف خدماتنا</a>
+        </div>
+
+        <!-- Abstract Dashboard Mockup to show "Premium UI" feel -->
+        <div class="mockup-container">
+            <div class="mockup-sidebar">
+                <div class="skeleton-line" style="height: 32px; width: 40px; border-radius: 50%; margin-bottom: 16px;"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line long" style="margin-top: 24px;"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+            <div class="mockup-main">
+                <div class="mockup-card">
+                    <h3 style="color: var(--text-secondary); font-size: 14px;">العملاء المحتملين اليوم (Leads)</h3>
+                    <h2 style="font-size: 32px; color: white;">+124</h2>
+                    <div class="mockup-chart"></div>
+                </div>
+                <div class="mockup-card" style="grid-row: span 2;">
+                    <h3 style="color: var(--text-secondary); font-size: 14px; margin-bottom: 16px;">آخر محادثات البوت</h3>
+                    <div style="padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; border-right: 3px solid #3B82F6; margin-bottom: 12px;">
+                        <span style="font-size: 12px; color: #3B82F6;">تم غلق صفقة جديدة 💰</span>
+                    </div>
+                     <div style="padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; margin-bottom: 12px;">
+                        <span style="font-size: 12px; color: var(--text-secondary);">استفسار عن عقار في دبي...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

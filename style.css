@@ -1,0 +1,133 @@
+/* 
+   🏛️ Ilyes AI Agency - Premium Vibe Code (Internal CSS)
+   Vibe: Deep Dark Mode, Royal Gold/Blue Accents, Glassmorphism.
+*/
+
+:root {
+    /* 🏛️ Color Palette (HSL) */
+    --bg-dark: 230 20% 5%;           /* Deepest Blue-Black */
+    --accent-gold: 45 100% 50%;     /* Royal Gold */
+    --accent-blue: 215 100% 60%;    /* Cyber Blue */
+    --text-white: 0 0% 100%;
+    --text-muted: 0 0% 70%;
+    --card-bg: 230 20% 10%;         /* Glassmorphism base */
+    --card-border: 230 20% 15%;
+    
+    /* 🎨 Transitions */
+    --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: hsl(var(--bg-dark));
+    color: hsl(var(--text-white));
+    font-family: 'Outfit', 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* 💠 Typography */
+h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, hsl(var(--text-white)), hsl(var(--accent-gold)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 🖼️ Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+header {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* 🔱 Hero Section */
+.hero-content {
+    max-width: 800px;
+}
+
+.hero-tagline {
+    font-size: 5rem;
+    line-height: 1.1;
+    margin-bottom: 2.5rem;
+    animation: fadeIn 1s var(--smooth) forwards;
+}
+
+.hero-subtext {
+    font-size: 1.2rem;
+    color: hsl(var(--text-muted));
+    margin-bottom: 3.5rem;
+    max-width: 600px;
+}
+
+/* 💎 Buttons */
+.cta-button {
+    background: hsl(var(--accent-gold));
+    color: hsl(var(--bg-dark));
+    padding: 1.2rem 2.8rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 100px;
+    display: inline-block;
+    transition: transform 0.3s var(--smooth), box-shadow 0.3s var(--smooth);
+}
+
+.cta-button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 40px hsla(var(--accent-gold), 0.3);
+}
+
+/* 🪄 Glassmorphism Cards */
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 5rem;
+}
+
+.card {
+    background: hsla(var(--card-bg), 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid hsla(var(--card-border), 1);
+    padding: 3rem;
+    border-radius: 32px;
+    transition: transform 0.3s var(--smooth), border-color 0.3s var(--smooth);
+}
+
+.card:hover {
+    transform: scale(1.02);
+    border-color: hsla(var(--accent-gold), 0.5);
+}
+
+/* 🌀 Micro-animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 1s var(--smooth) forwards;
+}
+
+/* 📱 Mobile Optimization */
+@media (max-width: 768px) {
+    .hero-tagline { font-size: 3.2rem; }
+    .container { padding: 0 1.5rem; }
+}

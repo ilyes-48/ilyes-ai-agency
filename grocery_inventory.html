@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المخزون الذكي - Ilyes AI Grocery 📦</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --bg: #faf9f5; /* Blanch Casi */
+            --card: rgba(255, 255, 255, 0.9);
+            --primary: #0070FF;
+            --gold: #B8860B;
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #111111;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', 'Noto Sans Arabic', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 40px; }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .header h1 { font-size: 28px; color: var(--primary); }
+
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+
+        /* نموذج الإدخال */
+        .form-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+
+        .form-card h3 { margin-bottom: 25px; color: var(--gold); border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 13px; color: #888; margin-bottom: 8px; }
+        .input-group input {
+            width: 100%; padding: 12px; background: #ffffff;
+            border: 1px solid var(--border); border-radius: 12px; color: var(--text);
+            font-size: 16px;
+        }
+
+        .btn-add {
+            width: 100%; padding: 15px; background: var(--primary); color: black;
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s; margin-top: 10px;
+        }
+        .btn-add:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+        /* قائمة المنتجات */
+        .list-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: right; }
+        th { color: #555; font-size: 12px; padding-bottom: 15px; border-bottom: 1px solid var(--border); }
+        td { padding: 15px 5px; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px; color: var(--text); }
+
+        .profit-badge { color: var(--primary); font-weight: 700; font-family: 'Outfit'; }
+        .stock-tag { background: rgba(0, 255, 157, 0.1); color: var(--primary); padding: 4px 8px; border-radius: 6px; font-size: 11px; }
+        
+        .nav-back { 
+            text-decoration: none; color: var(--text); background: var(--border); 
+            padding: 10px 20px; border-radius: 10px; font-size: 13px; transition: 0.3s;
+        }
+        .nav-back:hover { background: rgba(255,255,255,0.2); }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <div>
+                <h1>إدارة المخزون والسلع 📦</h1>
+                <p style="color:#666; font-size:12px;">Ilyes AI Grocery Management</p>
+            </div>
+            <a href="grocery_pos.html" class="nav-back">⬅️ العودة للبيع</a>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- إضافة منتج جديد -->
+            <div class="form-card">
+                <h3>إضافة سلعة جديدة</h3>
+                <div class="input-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="pName" placeholder="مثال: زيت إيليو 5ل">
+                </div>
+                <div class="input-group">
+                    <label>باركود (أو مسحه بالسكنار)</label>
+                    <input type="text" id="pCode" placeholder="رقم الكود">
+                </div>
+                <div class="input-group">
+                    <label>سعر الشراء (دج)</label>
+                    <input type="number" id="pBuy" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>سعر البيع (دج)</label>
+                    <input type="number" id="pSell" placeholder="0.00">
+                </div>
+                <div class="input-group">
+                    <label>الفئة (التصنيف)</label>
+                    <input type="text" id="pCategory" placeholder="مثال: مشروبات، معلبات...">
+                </div>
+                <div class="input-group">
+                    <label>الكمية المتوفرة</label>
+                    <input type="number" id="pQty" placeholder="مثال: 50">
+                </div>
+                <button class="btn-add" onclick="saveProduct()">حفظ في المخزون ✅</button>
+            </div>
+
+            <!-- قائمة السلع الحالية -->
+            <div class="list-card">
+                <h3>قائمة السلع المتوفرة</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المنتج</th>
+                            <th>كود</th>
+                            <th>الفئة</th>
+                            <th>البيع</th>
+                            <th>الفائدة</th>
+                            <th>الكمية</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTable">
+                        <!-- البيانات -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getInventory() {
+            const stored = localStorage.getItem('grocery_products');
+            return stored ? JSON.parse(stored) : {
+                "628123456789": { name: "حليب كونفيا 1ل", category: "ألبان", buy: 95, price: 105, qty: 120 },
+                "11223344": { name: "قهوة فاكتو 250غ", category: "معلبات", buy: 210, price: 240, qty: 45 }
+            };
+        }
+
+        function renderInventory() {
+            const table = document.getElementById('inventoryTable');
+            table.innerHTML = '';
+            const inventory = getInventory();
+            
+            Object.keys(inventory).forEach((code, index) => {
+                const p = inventory[code];
+                const profit = p.price - p.buy;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600;">${p.name}</td>
+                    <td style="font-family:monospace; color:#888;">${code}</td>
+                    <td style="color:var(--gold); font-size:12px;">${p.category || 'عام'}</td>
+                    <td style="font-family:Outfit; font-weight:700;">${p.price} دج</td>
+                    <td class="profit-badge">${profit} دج</td>
+                    <td><span class="stock-tag">${p.qty} قطعة</span></td>
+                `;
+                table.appendChild(tr);
+                gsap.from(tr, { y: 20, opacity: 0, duration: 0.5, delay: index * 0.05 });
+            });
+        }
+
+        function saveProduct() {
+            const name = document.getElementById('pName').value;
+            const code = document.getElementById('pCode').value;
+            const category = document.getElementById('pCategory').value || 'عام';
+            const buy = parseFloat(document.getElementById('pBuy').value);
+            const sell = parseFloat(document.getElementById('pSell').value);
+            const qty = parseInt(document.getElementById('pQty').value);
+
+            if(!name || !code || !sell) {
+                alert("⚠️ يرجى ملء الخانات الأساسية (الاسم، الكود، السعر)");
+                return;
+            }
+
+            const inventory = getInventory();
+            inventory[code] = { name, category, buy, price: sell, qty };
+            
+            localStorage.setItem('grocery_products', JSON.stringify(inventory));
+            
+            // تنظيف الخانات
+            document.getElementById('pName').value = '';
+            document.getElementById('pCode').value = '';
+            document.getElementById('pCategory').value = '';
+            document.getElementById('pBuy').value = '';
+            document.getElementById('pSell').value = '';
+            document.getElementById('pQty').value = '';
+
+            renderInventory();
+            alert(`✅ تم حفظ ${name} في المخزون بنجاح!`);
+        }
+
+        window.onload = renderInventory;
+    </script>
+</body>
+</html>
