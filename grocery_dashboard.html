@@ -221,11 +221,18 @@
             console.log("إرسال التقرير لـ n8n:", summary);
             alert(`✅ تم إرسال التقرير المجمع بنجاح!\nالمبيعات: ${summary.totalRevenue} دج\nالأرباح: ${summary.totalProfit} دج`);
             
-            // الكود الحقيقي للربط (Active n8n Bridge):
-            fetch('https://luckier-additory-josephine.ngrok-free.dev/webhook-test/daily-report-summary', {
+            // الكود الحقيقي للربط (Production Ready Bridge):
+            fetch('https://luckier-additory-josephine.ngrok-free.dev/webhook/daily-report-summary', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                mode: 'no-cors', // لضمان الإرسال من GitHub لـ Local/Ngrok بدون مشاكل أمنية
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(summary)
+            }).then(() => {
+                console.log("تم إرسال الطلب لـ n8n بنجاح!");
+            }).catch(err => {
+                console.error("خطأ في الاتصال:", err);
             });
         }
 

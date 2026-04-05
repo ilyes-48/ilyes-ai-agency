@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Le Homme DZ | Lead Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg: #050505;
+            --card: #121212;
+            --gold: #C5A059;
+            --gold-light: #E8D3A3;
+            --text-main: #FFFFFF;
+            --text-dim: #A0A0A0;
+            --border: rgba(197, 160, 89, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', 'Noto Sans Arabic', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); overflow-x: hidden; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        /* Header */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .logo-text { font-size: 32px; font-weight: 800; letter-spacing: 2px; background: linear-gradient(to bottom, var(--gold-light), var(--gold)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .agency-tag { font-size: 10px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; border: 1px solid var(--border); padding: 5px 15px; border-radius: 20px; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: var(--card); padding: 30px; border-radius: 20px; border: 1px solid var(--border); position: relative; overflow: hidden; }
+        .stat-card::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--gold); transform: scaleX(0); transition: 0.5s; }
+        .stat-card:hover::after { transform: scaleX(1); }
+        .stat-label { font-size: 14px; color: var(--text-dim); margin-bottom: 10px; }
+        .stat-value { font-size: 36px; font-weight: 600; }
+        .stat-icon { position: absolute; top: 20px; left: 20px; opacity: 0.1; font-size: 40px; }
+
+        /* Table */
+        .leads-table-container { background: var(--card); border-radius: 25px; border: 1px solid var(--border); padding: 30px; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; }
+        th { color: var(--gold); font-size: 14px; padding: 15px; border-bottom: 1px solid var(--border); }
+        td { padding: 20px 15px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .platform-tag { padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: bold; }
+        .tag-fb { background: rgba(0, 112, 255, 0.1); color: #0070FF; }
+        .tag-ig { background: rgba(255, 0, 115, 0.1); color: #FF0073; }
+        
+        .whatsapp-btn { color: #25D366; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-content">
+        <header>
+            <div class="logo-text">LE HOMME DZ</div>
+            <div class="agency-tag">Powered by Ilyes AI</div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">إجمالي الطلبات (Leads)</div>
+                <div class="stat-value">128</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">طلبات فيسبوك</div>
+                <div class="stat-value">84</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">طلبات إنستغرام</div>
+                <div class="stat-value">44</div>
+            </div>
+        </div>
+
+        <div class="leads-table-container">
+            <div class="table-header">
+                <h3>أحدث الطلبيات 🛒</h3>
+            </div>
+            <table id="leads-table">
+                <thead>
+                    <tr>
+                        <th>الزبون</th>
+                        <th>الهاتف</th>
+                        <th>القطعة</th>
+                        <th>المنصة</th>
+                        <th>التاريخ</th>
+                        <th>تأكيد</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ياسين براهيمي</td>
+                        <td>0661223344</td>
+                        <td>Veste Classique Noir</td>
+                        <td><span class="platform-tag tag-fb">Facebook</span></td>
+                        <td>20 دقيقة</td>
+                        <td><a href="#" class="whatsapp-btn">واتساب 🟢</a></td>
+                    </tr>
+                    <tr>
+                        <td>أمين قويري</td>
+                        <td>0550119988</td>
+                        <td>Ensemble Sport Gris</td>
+                        <td><span class="platform-tag tag-ig">Instagram</span></td>
+                        <td>ساعة واحدة</td>
+                        <td><a href="#" class="whatsapp-btn">واتساب 🟢</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        gsap.from(".stat-card", { y: 30, opacity: 0, stagger: 0.2, duration: 1, ease: "power3.out" });
+        gsap.from(".leads-table-container", { y: 50, opacity: 0, delay: 0.5, duration: 1, ease: "power3.out" });
+
+        // --- Simulation Mode ---
+        const names = ["حمزة رزقي", "وليد تلمساني", "سفيان بن علي", "مروان وهراني", "عثمان قسنطيني"];
+        const items = ["Veste Denim Blue", "Polo Slim Fit Blanc", "Ensemble Classique Gris", "T-shirt Premium Black"];
+        const platforms = ["Facebook", "Instagram"];
+
+        function addNewLead() {
+            const table = document.getElementById("leads-table").getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(0);
+            
+            const name = names[Math.floor(Math.random() * names.length)];
+            const item = items[Math.floor(Math.random() * items.length)];
+            const platform = platforms[Math.floor(Math.random() * platforms.length)];
+            const pClass = platform === "Facebook" ? "tag-fb" : "tag-ig";
+
+            newRow.innerHTML = `
+                <td style="color: var(--gold-light)">${name}</td>
+                <td>06${Math.floor(10000000 + Math.random() * 90000000)}</td>
+                <td>${item}</td>
+                <td><span class="platform-tag ${pClass}">${platform}</span></td>
+                <td style="color: #25D366">الآن 🔥</td>
+                <td><a href="#" class="whatsapp-btn">واتساب 🟢</a></td>
+            `;
+
+            gsap.from(newRow, { x: -30, opacity: 0, duration: 0.8 });
+        }
+
+        // Add a new lead every 15-25 seconds
+        setInterval(addNewLead, Math.random() * 10000 + 15000);
+    </script>
+</body>
+</html>
